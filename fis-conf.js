@@ -36,7 +36,7 @@ fis
   .set('project.ignore', ['dist/**', 'template/**', 'fis-conf.js', 'mock/**', 'live/**','README.md'])
   .match('**', {relative: true})
   .match('*.{js,css,png,jpg,gif,json}', {release: '/static/$0'})
-  .match('plugin/**', {
+  .match('*.js', {
     optimizer: fis.plugin('uglify-js')
   }).match('*.css', {optimizer: fis.plugin('clean-css')})
   .match('**.{png,jpg,gif}', {optimizer: fis.plugin('png-compressor')})
