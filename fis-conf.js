@@ -16,9 +16,9 @@ fis.set('project.ignore', ['dist/**', 'fis-conf.js', 'mock/**', 'live/**','READM
   optimizer: fis.plugin('png-compressor')
 });
 
-fis
+/*fis
   .media('mock')
-  .set('project.ignore', ['dist/**', 'fis-conf.js', 'live/**','README.md'])
+  .set('project.ignore', ['dist/!**', 'fis-conf.js', 'live/!**','README.md'])
   .match('*', {
     deploy: [
       fis.plugin('replace', {
@@ -29,7 +29,7 @@ fis
         to: './live'
       })
     ]
-  });
+  });*/
 
 fis
   .media('pro')

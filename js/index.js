@@ -10,6 +10,7 @@
     , longNum
     , cardSize
     , numFlag = 0
+    , updatePage
     , GAME_DATA = {};
 
 
@@ -55,8 +56,8 @@
     }
     roleList = data;
 
-    // 游戏当前进度 game-distribution 发牌阶段、game-start 游戏开始
-    GAME_DATA.step = 'game-distribution';
+    // 游戏当前进度 game-select 选择角色、game-distribution 分配角色阶段、game-start 游戏开始
+    GAME_DATA.step = 'game-select';
     GAME_DATA.roleList = roleList; // 桌上角色位置
     GAME_DATA.cardSize = cardSize; // 卡牌尺寸 宽=高
     GAME_DATA.lineNum = $.device.w > $.device.h ? HEIGHT_NUM : WIDTH_NUM; // 横向显示卡牌数量
@@ -65,21 +66,42 @@
 
   new Vue({
     el: '#index',
-    data: {game: GAME_DATA},
+    created: function () {
+      switch (GAME_DATA.step) {
+        case 'game-select':
+          this.gameSelect();
+          break;
+      }
+    },
+    data: {game: GAME_DATA, updatePage: 0},
     methods: {
-      startStep: function (e) {
+      clickCard: function (e, item) {
         var ele = $(e.currentTarget);
         // 判断游戏进度
         switch (GAME_DATA.step) {
+          case 'game-select':
+            item.active = true;
+            break;
           case 'game-distribution':
-            console.log(GAME_DATA.screenType)
-            if ((GAME_DATA.screenType === 'transverse' && ',6,7,8,'.indexOf(',' + ele.index() + ',') > -1) ||
-              (GAME_DATA.screenType === 'vertical' && ',4,7,10,'.indexOf(',' + ele.index() + ',') > -1)) {
-              return false;
-            }
-            ele.removeClass('game-distribution').css({'z-index': 1});
+            this.gameDistribution(ele);
             break;
         }
+        this.$data.updatePage = Math.random();
+      },
+      gameSelect: function () {
+        GAME_DATA.roleList = [];
+        _.map(ALL_ROLE, function (val) {
+          for (var i = 0; i < val.maxNum; i++) {
+            GAME_DATA.roleList.push(val);
+          }
+        });
+      },
+      gameDistribution: function (ele) {
+        if ((GAME_DATA.screenType === 'transverse' && ',6,7,8,'.indexOf(',' + ele.index() + ',') > -1) ||
+          (GAME_DATA.screenType === 'vertical' && ',4,7,10,'.indexOf(',' + ele.index() + ',') > -1)) {
+          return false;
+        }
+        ele.removeClass('game-distribution').css({'z-index': 1});
       }
     }
   });

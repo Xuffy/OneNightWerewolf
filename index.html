@@ -9,12 +9,13 @@
 </head>
 <body>
 <div id="index">
+  <span style="display: none" v-text="updatePage"></span>
   <ul class="card-box" v-bind:class="game.screenType">
 
     <li class="card-item"
-        v-for="(item,index) in game.roleList"
-        @click="item.type&&startStep($event,item)"
-        v-bind:class="[item.type,game.step,{'no-gamer':!item.type}]"
+        v-for="(item,index) in game.roleList" track-by="$index"
+        @click="item.type && clickCard($event,item)"
+        v-bind:class="[item.type,game.step,{'no-gamer':!item.type,'active':item.active}]"
         v-bind:style="{left:(index % game.lineNum * game.cardSize) + (index % game.lineNum * 10) + 'px',
         top:parseInt(index/game.lineNum) * game.cardSize + (parseInt(index/game.lineNum + 1) * 10) + 'px',
         'z-index':99-index}">
