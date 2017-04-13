@@ -2,6 +2,10 @@ body {
   overflow: hidden;
 }
 
+.onw-hide {
+  display: none !important;
+}
+
 #index {
   width: 100%;
   height: 100%;
@@ -16,15 +20,104 @@ body {
   height: 100%;
 }
 
+/*start 选牌阶段样式*/
+#select-card-box {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  text-align: center;
+}
+
+#select-card-box .btn-start {
+  position: absolute;
+  bottom: 20px;
+  width: 120px;
+  height: 40px;
+  line-height: 38px;
+  text-align: center;
+  border-radius: 30px;
+  font-weight: bold;
+  color: #ffffff;
+  left: 50%;
+  margin-left: -60px;
+  border: solid 1px #ffffff;
+  background-color: rgba(0, 0, 0, .5);
+}
+
+#select-card-box .game-title {
+  width: 95%;
+  margin: 20px 0 20px 0;
+}
+
+.select-card-box {
+  width: 100%;
+  height: 100%;
+  padding-right: 2%;
+}
+
+.select-card-box li {
+  width: 22.5%;
+  margin-left: 2%;
+  margin-bottom: 2%;
+  float: left;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.select-card-box img {
+  width: 100%;
+  opacity: .7;
+  float: left;
+}
+
+.select-card-box li span.name {
+  position: absolute;
+  left: 0;
+  bottom: 5px;
+  font-size: 1em;
+  width: 100%;
+  font-weight: bold;
+  z-index: 2;
+  text-align: center;
+  color: #d5d3d3;
+  text-shadow: 1px 1px 0 #666, -1px -1px 0 #666;
+}
+
+.select-card-box li.active {
+  border: solid 1px #ffffff;
+}
+
+.select-card-box li.active:before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, .3);
+}
+
+.select-card-box li.active img {
+  opacity: 1;
+}
+
+.select-card-box li.active span.name {
+  color: #ffffff;
+  text-shadow: none;
+}
+
+/*end 选牌阶段样式*/
+
 .card-item {
   float: left;
   border: solid 2px #ffffff;
   border-radius: 10px;
   position: absolute;
-  transition: all .5s;
-  -webkit-transition: all .5s;
-  -o-transition: all .5s;
-  -moz-transition: all .5s;
+  transition: all 2s;
+  -webkit-transition: all 2s;
+  -o-transition: all 2s;
+  -moz-transition: all 2s;
   box-sizing: border-box;
   background-repeat: no-repeat;
 }
