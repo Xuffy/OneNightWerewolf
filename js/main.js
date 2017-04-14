@@ -1,5 +1,5 @@
 'use strict';
-__inline('/config/config.js')
+__inline('/config/game.config.js')
 
 (function () {
 

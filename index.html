@@ -10,9 +10,9 @@
 <body>
 <div id="index">
 
-  <span class="onw-hide" v-text="updatePage"></span>
+  <span class="onw-hide" v-text="viewRandom"></span>
   <!--选牌阶段-->
-  <div id="select-card-box" class="onw-hide">
+  <div id="select-card-box" v-if="game.step === 'game-select'">
     <img src="img/game-title.png" class="game-title"/>
     <ul class="select-card-box">
       <li v-for="item in game.roleList" v-bind:class="[{'active':item.active}]"
@@ -36,15 +36,15 @@
       </li>
     </ul>
   </div>-->
-  <div id="card-box" class="onw-hide">
+  <!--v-bind:style="{left:(index % game.lineNum * game.cardSize) + (index % game.lineNum * 10) + 'px',width:game.cardSize + 'px',height:game.cardSize + 'px',top:parseInt(index/game.lineNum) * game.cardSize + (parseInt(index/game.lineNum + 1) * 10) + 'px',
+  'z-index':99-index}"-->
+  <div id="card-box" v-if="game.step !== 'game-select'">
     <ul class="card-box" v-bind:class="game.screenType">
       <li class="card-item"
           v-for="(item,index) in game.roleList" track-by="$index"
           @click="item.type && clickCard($event,item)"
           v-bind:class="[item.type,game.step,{'no-gamer':!item.type,'active':item.active}]"
-          v-bind:style="{left:(index % game.lineNum * game.cardSize) + (index % game.lineNum * 10) + 'px',
-        top:parseInt(index/game.lineNum) * game.cardSize + (parseInt(index/game.lineNum + 1) * 10) + 'px',
-        'z-index':99-index}">
+          v-bind:style="[item.style]">
         <span v-text="item.name" class="role-name"></span>
       </li>
     </ul>
