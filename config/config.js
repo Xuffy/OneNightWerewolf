@@ -10,7 +10,7 @@ window.ALL_ROLE = {
     type: 'DOPPELGANGER',
     sequence: 1,
     maxNum: 1,
-    image: __uri('/img/DOPPELGANGER.png')
+    image: __inline('/img/DOPPELGANGER.png')
   },
   WEREWOLF: {
     name: '狼人',
@@ -18,14 +18,14 @@ window.ALL_ROLE = {
     sequence: 2,
     assignment: {'n6': 2},
     maxNum: 2,
-    image: __uri('/img/WEREWOLF.png')
+    image: __inline('/img/WEREWOLF.png')
   },
   MINION: {
     name: '爪牙',
     type: 'MINION',
     sequence: 3,
     maxNum: 1,
-    image: __uri('/img/MINION.png')
+    image: __inline('/img/MINION.png')
   },
   MASON: {
     name: '守夜人',
@@ -33,7 +33,7 @@ window.ALL_ROLE = {
     sequence: 4,
     assignment: {'n6': 2},
     maxNum: 2,
-    image: __uri('/img/MASON.png')
+    image: __inline('/img/MASON.png')
   },
   SEER: {
     name: '预言家',
@@ -41,7 +41,7 @@ window.ALL_ROLE = {
     sequence: 5,
     assignment: {'n6': 1},
     maxNum: 1,
-    image: __uri('/img/SEER.png')
+    image: __inline('/img/SEER.png')
   },
   ROBBER: {
     name: '强盗',
@@ -49,7 +49,7 @@ window.ALL_ROLE = {
     sequence: 6,
     assignment: {'n6': 1},
     maxNum: 1,
-    image: __uri('/img/ROBBER.png')
+    image: __inline('/img/ROBBER.png')
   },
   TROUBLEMAKER: {
     name: '捣蛋鬼',
@@ -57,28 +57,28 @@ window.ALL_ROLE = {
     sequence: 7,
     assignment: {'n6': 1},
     maxNum: 1,
-    image: __uri('/img/TROUBLEMAKER.png')
+    image: __inline('/img/TROUBLEMAKER.png')
   },
   DRUNK: {
     name: '酒鬼',
     type: 'DRUNK',
     sequence: 8,
     maxNum: 1,
-    image: __uri('/img/DRUNK.png')
+    image: __inline('/img/DRUNK.png')
   },
   INSOMNIAC: {
     name: '失眠者',
     type: 'INSOMNIAC',
     sequence: 9,
     maxNum: 1,
-    image: __uri('/img/INSOMNIAC.png')
+    image: __inline('/img/INSOMNIAC.png')
   },
   HUNTER: {
     name: '猎人',
     type: 'HUNTER',
     sequence: 0,
     maxNum: 1,
-    image: __uri('/img/HUNTER.png')
+    image: __inline('/img/HUNTER.png')
   },
   VILLAGER: {
     name: '村民',
@@ -86,14 +86,14 @@ window.ALL_ROLE = {
     sequence: 0,
     assignment: {'n6': 2},
     maxNum: 3,
-    image: __uri('/img/VILLAGER.png')
+    image: __inline('/img/VILLAGER.png')
   },
   TANNER: {
     name: '皮匠',
     type: 'TANNER',
     sequence: 0,
     maxNum: 1,
-    image: __uri('/img/TANNER.png')
+    image: __inline('/img/TANNER.png')
   }
 
 };

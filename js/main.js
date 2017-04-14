@@ -1,4 +1,5 @@
 'use strict';
+__inline('/config/config.js')
 
 (function () {
 
