@@ -9,13 +9,23 @@
     , shortNum
     , longNum
     , cardSize
+    , GAME_DATA
     , numFlag = 0
-    , GAME_ROLE = []
-    , GAME_DATA = {};
+    , hole_cards
+    , GAME_ROLE = [];
 
 
   NUM_KEY = 'n' + PEOPLE_NUM;
-  GAME_DATA.step = GAME_DATA.step || 'game-select';
+  GAME_DATA = {
+    step: 'game-select', // 游戏进度： 'game-select' 选择卡牌、'game-select-seat' 选择座位、'game-distribution' 分配角色阶段、'game-start' 游戏开始
+    cardSize: 0, // 卡牌尺寸
+    lineNum: 0,// 横向显示卡牌数量
+    screenType: '', // 屏幕状态：transverse横屏、vertical竖屏
+    seatList: _.range(1, 16),
+    roleList: [{ // 角色列表
+      style: {} // 座位样式
+    }]
+  };
 
   init();
 
@@ -25,7 +35,6 @@
     document.body.addEventListener('touchmove', function (event) {
       event.preventDefault();
     }, false);
-
   }
 
   new Vue({
@@ -50,27 +59,6 @@
         return this.viewRandom = Math.random();
       },
       /**
-       * 点击卡牌事件
-       * @param e
-       * @param item
-       */
-      clickCard: function (e, item) {
-        var ele = $(e.currentTarget);
-        // 判断游戏进度
-        switch (GAME_DATA.step) {
-          case 'game-select':
-            var playerNum = 0;
-            item.active = !item.active;
-            playerNum = _.where(this.game.roleList, {active: true}).length;
-            this.playerNum = playerNum > 5 ? playerNum - 3 : 0;
-            break;
-          case 'game-distribution':
-            this.gameDistribution(ele);
-            break;
-        }
-        this.updateView();
-      },
-      /**
        * 初始化获取设备信息
        */
       initDeviceInfo: function () {
@@ -82,9 +70,11 @@
         ln = (longNum - ((WIDTH_NUM + 1) * 10)) / HEIGHT_NUM;
         cardSize = parseInt(sn > ln ? ln : sn);
 
-        GAME_DATA.cardSize = cardSize; // 卡牌尺寸 宽=高
-        GAME_DATA.lineNum = $.device.w > $.device.h ? HEIGHT_NUM : WIDTH_NUM; // 横向显示卡牌数量
-        GAME_DATA.screenType = $.device.w > $.device.h ? 'transverse' : 'vertical'; // 屏幕状态：transverse横屏、vertical竖屏
+        GAME_DATA.cardSize = cardSize;
+        GAME_DATA.lineNum = $.device.w > $.device.h ? HEIGHT_NUM : WIDTH_NUM;
+        GAME_DATA.screenType = $.device.w > $.device.h ? 'transverse' : 'vertical';
+        GAME_DATA.seatDirection = SEAT_DIRECTION[GAME_DATA.screenType];
+        hole_cards = HOLE_CARDS[GAME_DATA.screenType];
       },
       /**
        * 初始化游戏角色
@@ -98,33 +88,40 @@
         });
       },
       /**
-       * 初始化角色座位
+       * 初始化角色座位并随机排序
        */
       initGameSeat: function () {
-        var seatConfig = ROLE_SEAT[this.playerNum];
-
-        seatConfig = GAME_DATA.screenType === 'transverse' ? seatConfig.t : seatConfig.v;
         GAME_DATA.roleList = [];
 
+        // 随机排序
+        GAME_ROLE = _.shuffle(GAME_ROLE);
+
         for (var i = 0; i < 15; i++) {
-          if (seatConfig.indexOf(',' + (i + 1) + ',') > -1) {
+          if (!_.isObject(this.game.seatList[i])) {
             GAME_DATA.roleList.push({})
           } else {
+            // GAME_ROLE[0].sortBy = 0;
+            GAME_ROLE[0].sortBy = this.game.seatList[i].num;
             GAME_DATA.roleList.push(GAME_ROLE[0]);
             GAME_ROLE = _.rest(GAME_ROLE)
           }
-          console.log(this.seatStyle(i + 1, GAME_DATA.roleList[i]))
-          // GAME_DATA.roleList[i]=this.seatStyle(i,GAME_DATA.roleList[i])
+          this.seatStyle(i + 1, GAME_DATA.roleList[i]);
         }
       },
+      /**
+       * 座位布局算法
+       * @param index
+       * @param data
+       * @returns {void|*}
+       */
       seatStyle: function (index, data) {
         var style = {};
 
         style.width = style.height = GAME_DATA.cardSize + 'px';
         switch (GAME_DATA.screenType) {
-          case 'transverse':
+          case 'transverse': // 横屏布局
             break;
-          case 'vertical':
+          case 'vertical': // 竖屏布局
             if (index === 2 || index === 5 || index === 8 || index === 11 || index === 14) {
               style.left = '50%';
               style['margin-left'] = '-' + (GAME_DATA.cardSize / 2) + 'px';
@@ -134,8 +131,10 @@
               style['margin-top'] = '-' + (GAME_DATA.cardSize / 2) + 'px';
             }
             if (index === 4 || index === 5 || index === 6) {
-              style.top = '25%';
-              // style['margin-top'] = '-' + (GAME_DATA.cardSize / 2) + 'px';
+              style.top = (($.device.h / 2) - (GAME_DATA.cardSize * 2.5) - 10) / 2 + 10 + GAME_DATA.cardSize + 'px';
+            }
+            if (index === 10 || index === 11 || index === 12) {
+              style.bottom = (($.device.h / 2) - (GAME_DATA.cardSize * 2.5) - 10) / 2 + 10 + GAME_DATA.cardSize + 'px';
             }
             break;
         }
@@ -143,30 +142,70 @@
       },
       /**
        * 选择角色
+       * @param item
+       */
+      clickSelectRole: function (item) {
+        item.active = !item.active;
+        var playerNum = _.where(this.game.roleList, {active: true}).length;
+        this.playerNum = playerNum > 5 ? playerNum - 3 : 0;
+        this.updateView();
+      },
+      /**
+       * 选择角色确认
        * 注：玩家人数必须是3~12人
        */
-      clickStartGame: function () {
+      clickConfirmRole: function () {
         if (!_.findWhere(this.game.roleList, {type: 'WEREWOLF', active: true})) {
           alert('未选择狼人');
         } else if (this.playerNum > 12) {
           alert('最多12个玩家');
         } else {
-          GAME_ROLE = _.where(this.game.roleList, {active: true});
-          GAME_DATA.step = 'game-distribution';
-          this.initGameSeat();
+          if (GAME_DATA.step === 'game-select') { // 进入选牌阶段
+            $('.select-card-title').addClass('hide');
+            $('.select-seat-box').addClass('show');
+            GAME_DATA.step = 'game-select-seat';
+          } else if (GAME_DATA.step === 'game-select-seat') { // 选座位阶段
+            GAME_ROLE = _.where(this.game.roleList, {active: true});
+            GAME_DATA.step = 'game-distribution';
+            this.initGameSeat();
+          }
         }
       },
       /**
-       * 角色分配
-       * @param ele
-       * @returns {boolean}
+       * 确认座位顺序
+       * @param item
+       * @param index
        */
-      gameDistribution: function (ele) {
-        if ((GAME_DATA.screenType === 'transverse' && ',6,7,8,'.indexOf(',' + ele.index() + ',') > -1) ||
-          (GAME_DATA.screenType === 'vertical' && ',4,7,10,'.indexOf(',' + ele.index() + ',') > -1)) {
+      clickConfirmSeat: function (item, index) {
+        if (_.indexOf(hole_cards, index + 1) > -1) {
           return false;
         }
-        ele.removeClass('game-distribution').css({'z-index': 1});
+
+        if (_.isObject(item) && item.num) {
+          item.num = null;
+          this.updateView();
+          return false;
+        }
+
+        for (var i = 1; i <= this.playerNum; i++) {
+          if (_.isEmpty(_.findWhere(this.game.seatList, {num: i}))) {
+            this.updateView();
+            return this.game.seatList[index] = {num: i};
+          }
+        }
+      },
+      /**
+       * 玩家查看角色
+       * @param item
+       * @param index
+       * @returns {boolean}
+       */
+      clickSeeRole: function (item, index) {
+        if (_.indexOf(hole_cards, index + 1) > -1) {
+          return false;
+        }
+        // ele.removeClass('game-distribution').css({'z-index': 1});
+        this.updateView();
       },
       initGame: function () {
         var sn, ln, data = [];

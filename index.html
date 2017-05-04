@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport"/>
-  <title>Title</title>
+  <title>一夜终极狼人</title>
+  <link rel="icon" href="img/WEREWOLF.png" type="image/x-ico" />
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/index.css">
 </head>
@@ -12,40 +13,41 @@
 
   <span class="onw-hide" v-text="viewRandom"></span>
   <!--选牌阶段-->
-  <div id="select-card-box" v-if="game.step === 'game-select'">
-    <img src="img/game-title.png" class="game-title"/>
-    <ul class="select-card-box">
-      <li v-for="item in game.roleList" v-bind:class="[{'active':item.active}]"
-          @click="clickCard(this,item)">
-        <span class="name" v-text="item.name"></span>
-        <img :src="item.image"/>
+  <div id="select-card-box" v-if="game.step === 'game-select' || game.step === 'game-select-seat'">
+    <!--选角色-->
+    <div class="select-card-title">
+      <img src="img/game-title.png" class="game-title"/>
+      <ul class="select-card-box" v-bind:class="game.screenType">
+        <li v-for="item in game.roleList" v-bind:class="[{'active':item.active}]"
+            @click="clickSelectRole(item)">
+          <span class="name" v-text="item.name"></span>
+          <img :src="item.image"/>
+        </li>
+      </ul>
+    </div>
+
+    <!--选座位-->
+    <ul class="select-seat-box" v-bind:class="game.screenType">
+      <li v-for="(item,index) in game.seatList" v-bind:class="game.seatDirection[index]"
+          @click="clickConfirmSeat(item,index)">
+        <span class="num" v-bind:class="{'onw-hide':!item.num}" v-text="item.num"></span>
+        <img src="img/card-back.png">
       </li>
     </ul>
-    <div class="btn-start" v-text="playerNum ? playerNum + '人游戏' : '选择角色'" @click="playerNum && clickStartGame()"></div>
+
+    <div class="btn-start" v-text="game.step === 'game-select' ? (playerNum ? playerNum + '人游戏' : '选择角色') : '确认座位'"
+         @click="playerNum && clickConfirmRole()"></div>
   </div>
 
-  <!--游戏阶段-->
-  <!--<div id="card-box" class="">
+  <div id="card-box" v-if="game.step !== 'game-select' && game.step !== 'game-select-seat'">
     <ul class="card-box" v-bind:class="game.screenType">
       <li class="card-item"
-          v-for="(item,index) in game.roleList" track-by="$index"
-          @click="item.type && clickCard($event,item)"
-          v-bind:class="[game.step,{'no-gamer':!item.type,'active':item.active}]">
-        &lt;!&ndash;<span v-text="item.name" class="role-name"></span>&ndash;&gt;
-        <img :src="item.image">
-      </li>
-    </ul>
-  </div>-->
-  <!--v-bind:style="{left:(index % game.lineNum * game.cardSize) + (index % game.lineNum * 10) + 'px',width:game.cardSize + 'px',height:game.cardSize + 'px',top:parseInt(index/game.lineNum) * game.cardSize + (parseInt(index/game.lineNum + 1) * 10) + 'px',
-  'z-index':99-index}"-->
-  <div id="card-box" v-if="game.step !== 'game-select'">
-    <ul class="card-box" v-bind:class="game.screenType">
-      <li class="card-item"
-          v-for="(item,index) in game.roleList" track-by="$index"
-          @click="item.type && clickCard($event,item)"
-          v-bind:class="[item.type,game.step,{'no-gamer':!item.type,'active':item.active}]"
+          v-for="(item,index) in game.roleList" track-by="index"
+          @click="item.type && clickSeeRole(item,index)"
+          v-bind:class="[item.type,game.step,{'no-gamer':!item.type,'active':item.active},game.seatDirection[index]]"
           v-bind:style="[item.style]">
         <span v-text="item.name" class="role-name"></span>
+        <span v-text="item.sortBy" class="role-num"></span>
       </li>
     </ul>
   </div>

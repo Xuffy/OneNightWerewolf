@@ -1,11 +1,22 @@
 // 角色座位配置 注：此配置是列出空位坐标
 window.ROLE_SEAT = [
-  null,null, null,
-  {t: ',1,2,3,4,6,10,12,13,15,', v: ',1,2,3,4,5,11,12,14,15,'},
+  null, null, null,
+  {t: ',1,2,3,4,5,11,12,14,15,', v: ',1,2,3,4,6,10,12,13,15,'},
   {t: '', v: ''},
   {t: '', v: ''},
   {t: ',1,3,5,11,13,15,', v: ',1,3,7,9,13,15,'}
 ];
+// 座位朝向配置
+window.SEAT_DIRECTION = {
+  vertical: ['seat-up', 'seat-up', 'seat-up', 'seat-left', 'seat-down', 'seat-right', 'seat-left', 'seat-down', 'seat-right', 'seat-left', 'seat-down', 'seat-right', 'seat-down', 'seat-down', 'seat-down'],
+  transverse: []
+};
+
+// 底牌配置
+window.HOLE_CARDS = {
+  vertical: [5, 8, 11],
+  transverse: [7, 8, 9]
+};
 
 // 角色属性 注：name 角色名称、type 角色类型、sequence 角色出场顺序、maxNum 角色最大数量
 window.ALL_ROLE = {
