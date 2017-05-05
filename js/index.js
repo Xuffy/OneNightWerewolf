@@ -23,7 +23,8 @@
     screenType: '', // 屏幕状态：transverse横屏、vertical竖屏
     seatList: _.range(1, 16),
     roleList: [{ // 角色列表
-      style: {} // 座位样式
+      style: {}, // 座位样式
+      addClass: [] // 样式属性
     }]
   };
 
@@ -100,11 +101,17 @@
           if (!_.isObject(this.game.seatList[i])) {
             GAME_DATA.roleList.push({})
           } else {
-            // GAME_ROLE[0].sortBy = 0;
-            GAME_ROLE[0].sortBy = this.game.seatList[i].num;
+            GAME_ROLE[0].sortBy = this.game.seatList[i].num; // 座位序号
             GAME_DATA.roleList.push(GAME_ROLE[0]);
             GAME_ROLE = _.rest(GAME_ROLE)
           }
+          GAME_DATA.roleList[i].addClass = [];
+          GAME_DATA.roleList[i].addClass.push(SEAT_DIRECTION[GAME_DATA.screenType][i]);
+          // GAME_DATA.roleList[i].addClass = [];
+          if (_.indexOf(hole_cards, i + 1) > -1) {
+            GAME_DATA.roleList[i].addClass.push('hole-cards');
+          }
+          console.log(GAME_DATA.roleList[i])
           this.seatStyle(i + 1, GAME_DATA.roleList[i]);
         }
       },
